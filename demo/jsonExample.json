@@ -48,5 +48,17 @@
         }
       ]
     }
-  ]
+  ],
+  "equivalences": {
+    "_id": "Identifier",
+    "address": "Address",
+    "createdAt": "Created at",
+    "email": "E-mail",
+    "first_name": "First name",
+    "friends": "Friends",
+    "last_name": "Last name",
+    "name": "Complete name",
+    "phone": "Phone",
+    "updatedAt": "Updated at"
+  }
 }
