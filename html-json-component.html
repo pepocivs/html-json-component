@@ -13,7 +13,8 @@ This code may only be used under the MIT style license found at https://raw.gith
         display: block;
       }
     </style>
-    <h2>Hello [[json]]!</h2>
+    <h2>JSON - HTML Printer</h2>
+    <div id="printer"></div>
   </template>
 
   <script>
@@ -32,12 +33,79 @@ This code may only be used under the MIT style license found at https://raw.gith
           json: {
             type: Object,
             notify: true,
-            observer: '_getJSON'
-          }
+            observer: '_convertJSON'
+          },
+          print: {
+            type: Boolean,
+            value: true
+          },
+          equivalences: {
+            type: Object,
+            value: {}
+          },
+          table: Boolean,
+          list: Boolean
         };
       }
-      _getJSON(json) {
-        console.log('_getJSON', json);
+      _convertJSON(json) {
+        if (this.table) this.generateTableHTML(json);
+        if (this.list) this.generateListHTML(json);
+      }
+
+      generateTableHTML(json) {
+        let htmlCode = '<table>';
+        this._print('table', htmlCode);
+        return json;
+      }
+
+      generateListHTML(json) {
+        let htmlCode = '<table>';
+        this._print('list', this.jsonBeautifier(json, ''));
+        return json;
+      }
+
+      _print(id, html) {
+        if (!this.print) return false;
+        const docPlace = this.$.printer;
+        const containerHTML = document.createElement("div");
+        containerHTML.id = id;
+        containerHTML.innerHTML = html;
+        docPlace.appendChild(containerHTML);
+      }
+
+
+
+
+      jsonBeautifier(json, parentKey) {
+        let html = (parentKey && parentKey.length > 0) ? 
+          `<ul><li><strong>${parentKey}:</strong> <ul>` : '<ul>';
+        html += (json.length === undefined) ? 
+          this.fillData(Object.keys(json), parentKey, html) : 
+          this.fillData(json, parentKey, html);
+        html += (parentKey && parentKey.length > 0) ? '</li></ul>' : '';
+        return html;
+      }
+      fillData(json, parentKey, html) {
+        html+= `</ul>${json.map(this._printRow, this).join()}`;
+      }
+
+      _printRow(objectKey, index, json) {
+        let html = '';
+        const key = this.equivalences[objectKey] || objectKey;
+        const value = (objectKey.length > 0) ? json[index][objectKey] : json[index];
+        switch (typeof value) {
+          case 'object':
+            html += this.jsonBeautifier(value, key);
+            break;
+          case 'boolean':
+            const parsedValue = (value === true) ? 'Yes' : 'No';
+            html += `<ul><li><strong>${key}: </strong> ${parsedValue}</li></ul>`;
+            break;
+          default:
+            html += `<ul><li><strong>${key}: </strong> ${value}</li></ul>`;
+            break;
+        }
+        return html;
       }
     }
 

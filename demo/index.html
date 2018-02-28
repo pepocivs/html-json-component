@@ -15,20 +15,30 @@
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>Basic html-json-component demo</h3>
+      <h3>html-json-component as a table</h3>
       <demo-snippet class="centered-demo">
-        <html-json-component></html-json-component>
-        <script>
-          let htmlJsonComponent = document.querySelector('html-json-component');
-          let url = `./jsonExample.json`;
-          fetch(url)
-            .then((resp) => resp.json())
-            .then((jsonData) => {
-              htmlJsonComponent.json = jsonData;
-            })
-            .catch((e) => { console.error(e); });
-        </script>
+        <html-json-component id="printTable" table></html-json-component>
       </demo-snippet>
+
+      <h3>html-json-component as a list</h3>
+      <demo-snippet class="centered-demo">
+        <html-json-component id="printList" list></html-json-component>
+      </demo-snippet>
+
+      <script>
+        const printTable = document.querySelector('#printTable');
+        const printList = document.querySelector('#printList');
+        const url = `./jsonExample.json`;
+        fetch(url)
+          .then((resp) => resp.json())
+          .then((json) => {
+            printTable.json = json.data;
+            printTable.equivalences = json.equivalences;
+            printList.json = json.data;
+            printList.equivalences = json.equivalences;
+          })
+          .catch((e) => { console.error(e); });
+      </script>
     </div>
   </body>
 </html>
