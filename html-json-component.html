@@ -1,0 +1,46 @@
+<!--
+@license
+Copyright (c) 2018 Jorge Martín Martí (@pepocivs). All rights reserved.
+This code may only be used under the MIT style license found at https://raw.githubusercontent.com/pepocivs/html-json-component/master/LICENSE.txt
+-->
+
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="html-json-component">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[json]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `html-json-component`
+     * JSON beautifier component for polymer
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class HtmlJsonComponent extends (class extends Polymer.Element {}) {
+      static get is() { return 'html-json-component'; }
+      static get properties() {
+        return {
+          json: {
+            type: Object,
+            notify: true,
+            observer: '_getJSON'
+          }
+        };
+      }
+      _getJSON(json) {
+        console.log('_getJSON', json);
+      }
+    }
+
+    window.customElements.define(HtmlJsonComponent.is, HtmlJsonComponent);
+  </script>
+</dom-module>
