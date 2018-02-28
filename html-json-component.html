@@ -43,25 +43,11 @@ This code may only be used under the MIT style license found at https://raw.gith
             type: Object,
             value: {}
           },
-          table: Boolean,
-          list: Boolean
+          output: String
         };
       }
       _convertJSON(json) {
-        if (this.table) this.generateTableHTML(json);
-        if (this.list) this.generateListHTML(json);
-      }
-
-      generateTableHTML(json) {
-        let htmlCode = '<table>';
-        this._print('table', htmlCode);
-        return json;
-      }
-
-      generateListHTML(json) {
-        let htmlCode = '<table>';
-        this._print('list', this.jsonBeautifier(json, ''));
-        return json;
+        this._print(this.jsonBeautifier(json, ''));
       }
 
       _print(id, html) {
@@ -73,37 +59,36 @@ This code may only be used under the MIT style license found at https://raw.gith
         docPlace.appendChild(containerHTML);
       }
 
-
-
-
       jsonBeautifier(json, parentKey) {
-        let html = (parentKey && parentKey.length > 0) ? 
+        let html = (parentKey && parentKey.length > 0) ?
           `<ul><li><strong>${parentKey}:</strong> <ul>` : '<ul>';
-        html += (json.length === undefined) ? 
-          this.fillData(Object.keys(json), parentKey, html) : 
-          this.fillData(json, parentKey, html);
+        html += (json.length === undefined) ?
+          this._fillData(Object.keys(json), parentKey, html) :
+          this._fillData(json, parentKey, html);
         html += (parentKey && parentKey.length > 0) ? '</li></ul>' : '';
         return html;
       }
-      fillData(json, parentKey, html) {
-        html+= `</ul>${json.map(this._printRow, this).join()}`;
+      _fillData(json, parentKey, html) {
+        return `${html}</ul>${json.map(this._printRow, this).join()}`;
       }
-
-      _printRow(objectKey, index, json) {
+      _printRow(objectKey, index) {
         let html = '';
-        const key = this.equivalences[objectKey] || objectKey;
-        const value = (objectKey.length > 0) ? json[index][objectKey] : json[index];
-        switch (typeof value) {
-          case 'object':
-            html += this.jsonBeautifier(value, key);
-            break;
-          case 'boolean':
-            const parsedValue = (value === true) ? 'Yes' : 'No';
-            html += `<ul><li><strong>${key}: </strong> ${parsedValue}</li></ul>`;
-            break;
-          default:
-            html += `<ul><li><strong>${key}: </strong> ${value}</li></ul>`;
-            break;
+        if (typeof objectKey === 'object') html += this.jsonBeautifier(objectKey, index);
+        else {
+          const key = this.equivalences[objectKey] || objectKey;
+          const value = (this.json[index] && this.json[index].length) ? this.json[index] : this.json[index][objectKey];
+          switch (typeof value) {
+            case 'object':
+              html += this.jsonBeautifier(value, key);
+              break;
+            case 'boolean':
+              const parsedValue = (value === true) ? 'Yes' : 'No';
+              html += `<ul><li><strong>${key}: </strong> ${parsedValue}</li></ul>`;
+              break;
+            default:
+              html += `<ul><li><strong>${key}: </strong> ${value}</li></ul>`;
+              break;
+          }
         }
         return html;
       }
