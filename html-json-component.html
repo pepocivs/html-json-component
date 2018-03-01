@@ -69,9 +69,9 @@ This code may only be used under the MIT style license found at https://raw.gith
       }
       _fillData(json, html, currentJson) {
         this.currentJson = currentJson || json;
-        return `${html}</ul>${json.map(this._printRow, this).join('')}`;
+        return `${html}</ul>${json.map(this._fillRow, this).join('')}`;
       }
-      _printRow(objectKey, index) {
+      _fillRow(objectKey, index) {
         let html = '';
         if (typeof objectKey === 'object') html += this.jsonBeautifier(objectKey, index);
         else {
