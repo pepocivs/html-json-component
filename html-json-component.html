@@ -79,7 +79,8 @@ This code may only be used under the MIT style license found at https://raw.gith
         if (!this.print) return false;
         const docPlace = this.$.printer;
         const containerHTML = document.createElement("div");
-        containerHTML.innerHTML = html;
+        
+        containerHTML.innerHTML = `<${this._HTMLTags.container}>${html}</${this._HTMLTags.container}>`;
         docPlace.appendChild(containerHTML);
       }
 
@@ -103,17 +104,17 @@ This code may only be used under the MIT style license found at https://raw.gith
           let parsedValue = (value === key) ? '' : value;
           switch (typeof value) {
             case 'object':
-              html += `<li><span class="html-json_key">${key}</span><ul>${this.jsonBeautifier(value, key)}</ul></li>`;
+              html += `<${this._HTMLTags.child}><span class="html-json_key">${key}</span><${this._HTMLTags.parent}>${this.jsonBeautifier(value, key)}</${this._HTMLTags.parent}></${this._HTMLTags.child}>`;
               break;
             case 'boolean':
               parsedValue = (value === true) ? 'Yes' : 'No';
-              html += `<li><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></li>`;
+              html += `<${this._HTMLTags.child}><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></${this._HTMLTags.child}>`;
               break;
             default:
               if (value === key) {
-                html += `<li><span class="html-json_value">${value}</span></li>`;
+                html += `<${this._HTMLTags.child}><span class="html-json_value">${value}</span></${this._HTMLTags.child}>`;
               } else {
-                html += `<li><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></li>`;
+                html += `<${this._HTMLTags.child}><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></${this._HTMLTags.child}>`;
               }
               break;
           }
