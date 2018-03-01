@@ -70,7 +70,10 @@ This code may only be used under the MIT style license found at https://raw.gith
 
       _convertJSON() {
         if (!this.equivalences || !this.json) return false;
-        this._print(this.jsonBeautifier(this.json, ''));
+        try { const json = JSON.parse(this.json);
+        } catch (error) { return false; }
+
+        this._print(this.jsonBeautifier(json, ''));
       }
 
       _print(html) {
