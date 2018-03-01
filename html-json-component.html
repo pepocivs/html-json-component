@@ -61,13 +61,16 @@ This code may only be used under the MIT style license found at https://raw.gith
           },
           equivalences: {
             type: Object,
-            value: {}
+            notify: true,
+            observer: '_convertJSON'            
           },
           output: String
         };
       }
-      _convertJSON(json) {
-        this._print(this.jsonBeautifier(json, ''));
+
+      _convertJSON() {
+        if (!this.equivalences || !this.json) return false;
+        this._print(this.jsonBeautifier(this.json, ''));
       }
 
       _print(html) {
