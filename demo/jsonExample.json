@@ -16,7 +16,23 @@
         },
         {
           "_id": "5968fcad629fa84ab65a5761",
-          "name": "French Mcneil"
+          "name": "French Mcneil",
+          "userData": {
+            "phone": "+00 1234567890",
+            "address": "First street of Narnia",
+            "hobbies": ["field hockey", "swimming", "programming"],
+            "carreer": {
+              "school": [
+                {"name": "NY central school", "grades": "A+"},
+                {"name": "School christopher", "grades": "B"},
+                {"name": "Rye elemental school", "grades": "A"}
+              ],
+              "highSchool": [
+                {"name": "Dragons", "grades": "A"},
+                {"name": "Phoenix", "grades": "D"}
+              ]
+            }
+          }
         },
         {
           "_id": "5968fcad629fa84ab65a57fa",
