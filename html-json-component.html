@@ -12,6 +12,26 @@ This code may only be used under the MIT style license found at https://raw.gith
       :host {
         display: block;
       }
+      li, ul {
+        list-style: none;
+        margin: 3px 0px;
+      }
+      .html-json_key, .html-json_value {
+        border-radius: 10px;
+        padding: 0px 10px;
+        margin: 3px;
+      }
+      .html-json_key {
+        font-weight: bold;
+        color: #31708f;
+        background-color: #d9edf7;
+        border: 1px solid #bce8f1;
+      }
+      .html-json_value {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border: 1px solid #d6e9c6;
+      }
     </style>
     <h2>JSON - HTML Printer</h2>
     <div id="printer"></div>
@@ -78,15 +98,18 @@ This code may only be used under the MIT style license found at https://raw.gith
           let parsedValue = (value === key) ? '' : value;
           switch (typeof value) {
             case 'object':
-              html += `<li><span class="html-json_key">${key}: </span><ul>${this.jsonBeautifier(value, key)}</ul></li>`;
+              html += `<li><span class="html-json_key">${key}</span><ul>${this.jsonBeautifier(value, key)}</ul></li>`;
               break;
             case 'boolean':
               parsedValue = (value === true) ? 'Yes' : 'No';
-              html += `<li><span class="html-json_key">${key}: </span><span class="html-json_value">${parsedValue}</span></li>`;
+              html += `<li><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></li>`;
               break;
             default:
-            const dots = (value === key) ? '' : ': ';
-              html += `<li><span class="html-json_key">${key}${dots}</span><span class="html-json_value">${parsedValue}</span></li>`;
+              if (value === key) {
+                html += `<li><span class="html-json_value">${value}</span></li>`;
+              } else {
+                html += `<li><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></li>`;
+              }
               break;
           }
         }
