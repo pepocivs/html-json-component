@@ -50,11 +50,10 @@ This code may only be used under the MIT style license found at https://raw.gith
         this._print(this.jsonBeautifier(json, ''));
       }
 
-      _print(id, html) {
+      _print(html) {
         if (!this.print) return false;
         const docPlace = this.$.printer;
         const containerHTML = document.createElement("div");
-        containerHTML.id = id;
         containerHTML.innerHTML = html;
         docPlace.appendChild(containerHTML);
       }
@@ -63,20 +62,21 @@ This code may only be used under the MIT style license found at https://raw.gith
         let html = (parentKey && parentKey.length > 0) ?
           `<ul><li><strong>${parentKey}:</strong> <ul>` : '<ul>';
         html += (json.length === undefined) ?
-          this._fillData(Object.keys(json), parentKey, html) :
-          this._fillData(json, parentKey, html);
-        html += (parentKey && parentKey.length > 0) ? '</li></ul>' : '';
+          this._fillData(Object.keys(json), html, json) :
+          this._fillData(json, html);
+        html += (parentKey && parentKey.length > 0) ? '</li></ul>' : '</ul>';       
         return html;
       }
-      _fillData(json, parentKey, html) {
-        return `${html}</ul>${json.map(this._printRow, this).join()}`;
+      _fillData(json, html, currentJson) {
+        this.currentJson = currentJson || json;
+        return `${html}</ul>${json.map(this._printRow, this).join('')}`;
       }
       _printRow(objectKey, index) {
         let html = '';
         if (typeof objectKey === 'object') html += this.jsonBeautifier(objectKey, index);
         else {
           const key = this.equivalences[objectKey] || objectKey;
-          const value = (this.json[index] && this.json[index].length) ? this.json[index] : this.json[index][objectKey];
+          const value = (this.currentJson[index] && this.currentJson[index].length) ? this.currentJson[index] : this.currentJson[objectKey];
           switch (typeof value) {
             case 'object':
               html += this.jsonBeautifier(value, key);
