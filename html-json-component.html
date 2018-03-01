@@ -59,17 +59,15 @@ This code may only be used under the MIT style license found at https://raw.gith
       }
 
       jsonBeautifier(json, parentKey) {
-        let html = (parentKey && parentKey.length > 0) ?
-          `<ul><li><strong>${parentKey}:</strong> <ul>` : '<ul>';
+        let html = '';
         html += (json.length === undefined) ?
           this._fillData(Object.keys(json), html, json) :
           this._fillData(json, html);
-        html += (parentKey && parentKey.length > 0) ? '</li></ul>' : '</ul>';       
         return html;
       }
       _fillData(json, html, currentJson) {
         this.currentJson = currentJson || json;
-        return `${html}</ul>${json.map(this._fillRow, this).join('')}`;
+        return `${html}${json.map(this._fillRow, this).join('')}<br />`;
       }
       _fillRow(objectKey, index) {
         let html = '';
@@ -77,16 +75,18 @@ This code may only be used under the MIT style license found at https://raw.gith
         else {
           const key = this.equivalences[objectKey] || objectKey;
           const value = (this.currentJson[index] && this.currentJson[index].length) ? this.currentJson[index] : this.currentJson[objectKey];
+          let parsedValue = (value === key) ? '' : value;
           switch (typeof value) {
             case 'object':
-              html += this.jsonBeautifier(value, key);
+              html += `<li><span class="html-json_key">${key}: </span><ul>${this.jsonBeautifier(value, key)}</ul></li>`;
               break;
             case 'boolean':
-              const parsedValue = (value === true) ? 'Yes' : 'No';
-              html += `<ul><li><strong>${key}: </strong> ${parsedValue}</li></ul>`;
+              parsedValue = (value === true) ? 'Yes' : 'No';
+              html += `<li><span class="html-json_key">${key}: </span><span class="html-json_value">${parsedValue}</span></li>`;
               break;
             default:
-              html += `<ul><li><strong>${key}: </strong> ${value}</li></ul>`;
+            const dots = (value === key) ? '' : ': ';
+              html += `<li><span class="html-json_key">${key}${dots}</span><span class="html-json_value">${parsedValue}</span></li>`;
               break;
           }
         }
