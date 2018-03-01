@@ -63,7 +63,12 @@ This code may only be used under the MIT style license found at https://raw.gith
             type: Object,
             value: {}
           },
-          output: String
+          output: {
+            type: String,
+            observer: '_setTagsHTML'
+          },
+          _HTMLTags: Object
+
         };
       }
       _convertJSON(json) {
@@ -114,6 +119,32 @@ This code may only be used under the MIT style license found at https://raw.gith
           }
         }
         return html;
+      }
+
+      _setTagsHTML(output) {
+        switch (output) {
+          case 'table':
+            this._HTMLTags = {
+              'container': 'table',
+              'parent': 'tr',
+              'child': 'td'
+            }
+            break;
+          case 'list':
+            this._HTMLTags = {
+              'container': 'div',
+              'parent': 'ul',
+              'child': 'li'
+            }
+            break;
+          default:
+            this._HTMLTags = {
+              'container': 'table',
+              'parent': 'tr',
+              'child': 'td'
+            }
+            break;
+        }
       }
     }
 
