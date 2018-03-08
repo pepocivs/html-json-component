@@ -84,18 +84,21 @@ This code may only be used under the MIT style license found at https://raw.gith
       }
 
       jsonBeautifier(json, parentKey) {
+        console.log('jsonBeautifier', parentKey);
         let html = '';
         html += (json.length === undefined) ?
-          this._fillData(Object.keys(json), html, json) :
-          this._fillData(json, html);
+        this._fillData(Object.keys(json), html, json) :
+        this._fillData(json, html, this.currentJson);
         return html;
       }
       _fillData(json, html, currentJson) {
+        console.log('_fillData', json, currentJson);
         this.currentJson = currentJson || json;
         return `${html}${json.map(this._fillRow, this).join('')}<br />`;
       }
       _fillRow(objectKey, index) {
         let html = '';
+        if (objectKey === 'hobbies') debugger;
         if (typeof objectKey === 'object') html += this.jsonBeautifier(objectKey, index);
         else {
           const key = this._strToJson(this.equivalences)[objectKey] || objectKey;
@@ -121,6 +124,10 @@ This code may only be used under the MIT style license found at https://raw.gith
               if (value === key) {
                 html += `<li>
                           <span class="html-json_value">${value}</span>
+                        </li>`;
+              } else if (!value) {
+                html += `<li>
+                          <span class="html-json_value">${key}</span>
                         </li>`;
               } else {
                 html += `<li>
