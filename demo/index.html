@@ -15,9 +15,10 @@
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>html-json-component as a table</h3>
+
+      <h3>html-json-component as a list with params</h3>
       <demo-snippet class="centered-demo">
-        <html-json-component id="printTable" json="{'hello': 'brother'}" equivalences="{'hello': 'hola'}" output="table"></html-json-component>
+        <html-json-component json="{'key': 'value'}" equivalences="{'key': 'The key'}" output="list"></html-json-component>
       </demo-snippet>
 
       <h3>html-json-component as a list</h3>
@@ -26,16 +27,13 @@
       </demo-snippet>
 
       <script>
-        const printTable = document.querySelector('#printTable');
         const printList = document.querySelector('#printList');
         const url = `./jsonExample.json`;
         fetch(url)
           .then((resp) => resp.json())
           .then((json) => {
-            // printTable.json = json.data;
-            // printTable.equivalences = json.equivalences;
-            // printList.json = json.data;
-            // printList.equivalences = json.equivalences;
+            printList.equivalences = json.equivalences;
+            printList.json = json.data;
           })
           .catch((e) => { console.error(e); });
       </script>

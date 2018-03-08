@@ -61,8 +61,7 @@ This code may only be used under the MIT style license found at https://raw.gith
           },
           equivalences: {
             type: Object,
-            notify: true,
-            observer: '_convertJSON'            
+            notify: true
           },
           output: String
         };
@@ -70,16 +69,16 @@ This code may only be used under the MIT style license found at https://raw.gith
 
       _convertJSON() {
         if (!this.equivalences || !this.json) return false;
-        try { const json = JSON.parse(this.json);
-        } catch (error) { return false; }
-
-        this._print(this.jsonBeautifier(json, ''));
+        try {
+          const parsedJson = this._strToJson(this.json);          
+          this._print(this.jsonBeautifier(parsedJson, ''));
+        } catch (error) { console.error(error); }
       }
 
       _print(html) {
         if (!this.print) return false;
         const docPlace = this.$.printer;
-        const containerHTML = document.createElement("div");
+        const containerHTML = document.createElement('div');
         containerHTML.innerHTML = html;
         docPlace.appendChild(containerHTML);
       }
@@ -99,27 +98,47 @@ This code may only be used under the MIT style license found at https://raw.gith
         let html = '';
         if (typeof objectKey === 'object') html += this.jsonBeautifier(objectKey, index);
         else {
-          const key = this.equivalences[objectKey] || objectKey;
-          const value = (this.currentJson[index] && this.currentJson[index].length) ? this.currentJson[index] : this.currentJson[objectKey];
+          const key = this._strToJson(this.equivalences)[objectKey] || objectKey;
+          const value = (this.currentJson[index] && this.currentJson[index].length) ?
+            this.currentJson[index] :
+            this.currentJson[objectKey];
           let parsedValue = (value === key) ? '' : value;
           switch (typeof value) {
             case 'object':
-              html += `<li><span class="html-json_key">${key}</span><ul>${this.jsonBeautifier(value, key)}</ul></li>`;
+              html += `<li>
+                        <span class="html-json_key">${key}</span>
+                        <ul>${this.jsonBeautifier(value, key)}</ul>
+                      </li>`;
               break;
             case 'boolean':
               parsedValue = (value === true) ? 'Yes' : 'No';
-              html += `<li><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></li>`;
+              html += `<li>
+                        <span class="html-json_key">${key}</span>
+                        <span class="html-json_value">${parsedValue}</span>
+                      </li>`;
               break;
             default:
               if (value === key) {
-                html += `<li><span class="html-json_value">${value}</span></li>`;
+                html += `<li>
+                          <span class="html-json_value">${value}</span>
+                        </li>`;
               } else {
-                html += `<li><span class="html-json_key">${key}</span><span class="html-json_value">${parsedValue}</span></li>`;
+                html += `<li>
+                          <span class="html-json_key">${key}</span>
+                          <span class="html-json_value">${parsedValue}</span>
+                        </li>`;
               }
               break;
           }
         }
         return html;
+      }
+
+      //** Helper Functions */
+      _strToJson(str) {
+        if (typeof str !== 'string') return str;
+        const validString = str.replace(/'/g, '"');
+        return JSON.parse(validString);
       }
     }
 
