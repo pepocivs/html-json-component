@@ -15,34 +15,37 @@
 
     <test-fixture id="BasicTestFixture">
       <template>
-        <html-json-component></html-json-component>
+        <html-json-component output="list"></html-json-component>
       </template>
     </test-fixture>
 
     <test-fixture id="ChangedPropertyTestFixture">
       <template>
-        <html-json-component prop1="new-prop1"></html-json-component>
+        <html-json-component json="{'key': 'value'}" equivalences="{'key': 'The key'}" output="list"></html-json-component>        
       </template>
     </test-fixture>
 
     <script>
       suite('html-json-component', () => {
 
-        test('instantiating the element with default properties works', () => {
+        test('Should get blank when instantiating the element with no properties', () => {
           const element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'html-json-component');
           const elementShadowRoot = element.shadowRoot;
           const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello html-json-component!');
+          assert.equal(elementHeader.innerHTML, 'JSON - HTML Printer');
+          const printArea = elementShadowRoot.querySelector('#printer');
+          assert.equal(printArea.innerHTML, '');
         });
 
-        test('setting a property on the element works', () => {
-          // Create a test fixture
+        test('Should show printer JSON when instantiating the element with properties', () => {
           const element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
           const elementShadowRoot = element.shadowRoot;
           const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+          assert.equal(elementHeader.innerHTML, 'JSON - HTML Printer');
+          const printedKey = elementShadowRoot.querySelector('.html-json_key');
+          assert.equal(printedKey.innerHTML, 'The key');
+          const printedValue = elementShadowRoot.querySelector('.html-json_value');
+          assert.equal(printedValue.innerHTML, 'value');
         });
 
       });
